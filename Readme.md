@@ -1,4 +1,4 @@
-# Marger Login dan Search Api
+# Merge Login dan Search Api
 
 1. Akses aplikasi http://localhost:3000 di index.js.
 
