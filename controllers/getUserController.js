@@ -5,9 +5,9 @@ exports.getUser = async (req, res, next) => {
 
     try {
         const user = req.query
-        console.log(user)
+
         const [row] = await conn.execute(
-            "SELECT id,username,email FROM users WHERE email=?",
+            "SELECT id,username,email,gender,age,height,weight FROM users WHERE email=?",
             [user.email]
         );
         if (row.length > 0) {
