@@ -25,8 +25,16 @@ exports.uploadImage = [
         if (req.file && req.file.cloudStoragePublicUrl) {
             data.imageUrl = req.file.cloudStoragePublicUrl
         }
-    
-        res.send(data);
+
+        const predictionEndpoint = `https://image-detection-soewhs74mq-et.a.run.app/predict_image`;
+        const predictImageUrl = `${predictionEndpoint}?url=${encodeURIComponent(data.imageUrl)}`;
+        try {
+            const response = await axios.post(predictImageUrl);
+            res.send(data);
+            res.json({imageUrl: data.imageUrl, prediction: response.data.result});
+        } catch (error) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
         
         res.status(200).json({
             message: 'File uploaded successfully.',
