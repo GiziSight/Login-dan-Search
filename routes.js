@@ -4,7 +4,7 @@ const { register } = require('./controllers/registerController');
 const { login } = require('./controllers/loginController');
 const { getUser } = require('./controllers/getUserController');
 const { search } = require('./controllers/searchController'); // Menambahkan controller pencarian
-const { uploadFile } = require('./controllers/uploadImageController');
+const { uploadImage } = require('./controllers/uploadImageController');
 
 router.post('/register', [
     // Validasi register
@@ -22,6 +22,6 @@ router.get('/api/search', [
 
 router.post('/upload', [
 
-], uploadFile.uploadImage);
+], uploadImage);
 
 module.exports = router;
