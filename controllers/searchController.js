@@ -30,8 +30,8 @@ exports.search = async (req, res) => {
 
     try {
         const results = await googleSearch(query, apiKey, cx);
-        res.status(200).json(results);
+        res.status(200).json({ article: results });
     } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+        res.status(500).json({ error: error.message });
+    }
 };
