@@ -11,15 +11,9 @@ exports.login = async (req, res, next) => {
     }
 
     const email = req.body.email;
-
-    if (!email) {
-        return res.status(422).json({
-            message: "Email address is required",
-        });
-    }
+    const password = req.body.password;
 
     try {
-
         const [row] = await conn.execute(
             "SELECT * FROM `users` WHERE `email`=?",
             [email]
@@ -31,21 +25,20 @@ exports.login = async (req, res, next) => {
             });
         }
 
-        const passMatch = await bcrypt.compare(req.body.password, row[0].password);
+        const passMatch = await bcrypt.compare(password, row[0].password);
         if (!passMatch) {
             return res.status(422).json({
                 message: "Incorrect password",
             });
         }
 
-        const theToken = jwt.sign({ id: row[0].id }, 'the-super-strong-secrect', { expiresIn: '1h' });
+        const token = jwt.sign({ id: row[0].id }, 'the-super-strong-secrect', { expiresIn: '1h' });
 
         return res.json({
-            token: theToken
+            token: token
         });
 
-    }
-    catch (err) {
+    } catch (err) {
         next(err);
     }
-}
+};
