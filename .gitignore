@@ -1,2 +1,3 @@
 node_modules
 upload-serviceaccount.json
+.env

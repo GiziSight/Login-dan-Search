@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Multer = require('multer');
 const imgUpload = require('../modules/imgUpload'); 
 const { default: axios } = require('axios');
@@ -21,7 +22,7 @@ exports.uploadImage = [
             data.imageUrl = req.file.cloudStoragePublicUrl
         }
         const imageUrl = req.file.cloudStoragePublicUrl;
-        const predictionEndpoint = 'https://image-detection-soewhs74mq-et.a.run.app/predict_image';
+        const predictionEndpoint = PROCESS.ENV.UPLOAD_IMAGE;
         const predictImageUrl = `${predictionEndpoint}?url=${encodeURIComponent(imageUrl)}`;
 
         axios.post(predictImageUrl)
