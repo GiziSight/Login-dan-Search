@@ -22,7 +22,7 @@ exports.uploadImage = [
             data.imageUrl = req.file.cloudStoragePublicUrl
         }
         const imageUrl = req.file.cloudStoragePublicUrl;
-        const predictionEndpoint = PROCESS.ENV.UPLOAD_IMAGE;
+        const predictionEndpoint = process.env.UPLOAD_IMAGE;
         const predictImageUrl = `${predictionEndpoint}?url=${encodeURIComponent(imageUrl)}`;
 
         axios.post(predictImageUrl)
@@ -32,6 +32,8 @@ exports.uploadImage = [
                 imageUrl: req.file.cloudStoragePublicUrl, 
                 prediction: response.data.result,
                 accuracy: response.data.akurasi
+                //gizi
+                //manfaat
             });
         })
         .catch(error => {

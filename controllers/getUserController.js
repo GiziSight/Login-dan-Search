@@ -6,7 +6,7 @@ const AKGLaki = require('../dataAKGLaki.json');
 
 exports.getUser = async (req, res, next) => {
     try {
-        // ... (authentication code)
+        // ... (kode autentikasi)
 
         const theToken = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(theToken, 'the-super-strong-secrect');
@@ -17,7 +17,7 @@ exports.getUser = async (req, res, next) => {
         );
 
         if (row.length > 0) {
-            let userData = row[0];
+            const userData = row[0];
             const birthdate = moment(userData.birthdate);
             const now = moment();
             const userAgeYears = now.diff(birthdate, 'years');
@@ -61,19 +61,32 @@ exports.getUser = async (req, res, next) => {
             }
 
             if (akgData) {
-                const { id, username, email, gender, age, height, weight } = userData;
+                const nutritionalComponents = Object.keys(akgData);
+                const excludedItems = ["Gender", "Usia", "TB", "BB"];
+                const groupSize = 12;
+                
+                // Filter out excluded items
+                const filteredComponents = nutritionalComponents.filter(component => !excludedItems.includes(component));
+                
+                // Split the nutritional components into groups of 12
+                const groupedComponents = [];
+                for (let i = 0; i < filteredComponents.length; i += groupSize) {
+                    const group = filteredComponents.slice(i, i + groupSize);
+                    groupedComponents.push(group);
+                }
+                
+                // Generate dictionaries for each group
+                const dictionaries = groupedComponents.map((group, index) => {
+                    const bagianKey = `bagian${index + 1}`;
+                    return {
+                        [bagianKey]: group.map(component => ({
+                            "name": component,
+                            "nilai": akgData[component]
+                        }))
+                    };
+                });
 
-                const modifiedUserData = {
-                    id,
-                    username,
-                    email,
-                    gender,
-                    age,
-                    height,
-                    weight
-                };
-
-                return res.json({ user: modifiedUserData, akgData });
+                return res.json({ user: userData, akgData: dictionaries });
             } else {
                 return res.json({ message: "Data AKG tidak ditemukan untuk rentang usia pengguna" });
             }
