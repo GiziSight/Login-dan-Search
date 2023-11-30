@@ -68,31 +68,53 @@ exports.getUser = async (req, res, next) => {
 
                 // Filter out excluded items
                 const excludedItems = ["Gender", "Usia", "TB", "BB"];
+                const groupSizes = [8, 12, 13]; // Adjusted group sizes
                 const filteredComponents = nutritionalComponents.filter(component => !excludedItems.includes(component));
-                
-                // Split the nutritional components into groups of 12
-                const groupSize = 12;
-                const groupedComponents = [];
-                for (let i = 0; i < filteredComponents.length; i += groupSize) {
-                    const group = filteredComponents.slice(i, i + groupSize);
-                    groupedComponents.push(group);
-                }
 
-                // Generate dictionaries for each group (excluding the first four components)
+                // Split the nutritional components into groups of specified sizes
+                const groupedComponents = [];
+                let currentIndex = 0;
+                groupSizes.forEach(size => {
+                    const group = filteredComponents.slice(currentIndex, currentIndex + size);
+                    groupedComponents.push(group);
+                    currentIndex += size;
+                });
+
+                // Generate object for each group
                 const dictionaries = groupedComponents.map((group, index) => {
                     const bagianKey = `bagian${index + 1}`;
+                    let componentsInGroup;
+
+                    // Specify components for each bagian
+                    switch (index + 1) {
+                        case 1:
+                            componentsInGroup = [ "Karbohidrat", "Protein", "Lemak Total", "Omega 3", "Omega 6", "Air", "Energi", "Serat"];
+                            break;
+                        case 2:
+                            componentsInGroup = ["Kolina", "Vitamin A", "Vitamin C", "Vitamin D", "Vitamin E", "Vitamin K", "Vitamin B1 (Thiamine)", "Vitamin B2 (Riboflavin)", "Vitamin B3 (Niasin)", "Vitamin B5 (Asam Pantotenat)", "Vitamin B6 (Piridoksina)", "Vitamin B7 (Biotin)", "Vitamin B9 (Folat)", "Vitamin B12 (Kobalamin)"];
+                            break;
+                        case 3:
+                            componentsInGroup = ["Besi", "Fluor", "Fosfor", "Klorin", "Kalium", "Kalsium", "Kromium", "Yodium", "Magnesium", "Mangan", "Natrium", "Seng", "Selenium", "Tembaga"];
+                            break;
+                        default:
+                            componentsInGroup = [];
+                    }
+
+                    componentsInGroup = componentsInGroup.map(component => ({
+                        "name": component,
+                        "nilai": akgData[component]
+                    }));
+
                     return {
-                        [bagianKey]: group.map(component => ({
-                            "name": component,
-                            "nilai": akgData[component]
-                        }))
+                        [bagianKey]: componentsInGroup
                     };
                 });
+
 
                 const nutrition = Object.assign({}, ...dictionaries);
                 const personalInformation = Object.assign({}, ...firstFourData);
 
-                return res.json({ user: userData, personalData: personalInformation ,akgData: nutrition });
+                return res.json({ user: userData, personalData: personalInformation, akgData: nutrition });
             } else {
                 return res.status(404).json({ message: "Data AKG tidak ditemukan untuk rentang usia pengguna" });
             }
