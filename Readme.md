@@ -84,10 +84,10 @@ gcloud run deploy model-api \
 ```
 
 ## GiziSight Endpoint
-1. /register
-Method : POST
-location: Body (RAW) JSON
-Example:
+1. /register\
+Method : POST\
+location: Body (RAW) JSON\
+Example:\
 ```json
 {
 "username": "jonno",
@@ -99,10 +99,10 @@ Example:
 "weight": 75
 }
 ```
-2. /login
-Method: POST
-location: Body (RAW) JSON
-Example:
+2. /login\
+Method: POST\
+location: Body (RAW) JSON\
+Example:\
 ```json
 {
 "username": "jonno",
@@ -110,22 +110,22 @@ Example:
 "password":"password123"
 }
 ```
-3. /getUser?
-Method: GET
-parameter : email
-Example:
+3. /getUser?\
+Method: GET\
+parameter : email\
+Example:\
 ```
 http://localhost:3000/getUser?email=jonnie@example.com
 ```
-4. /api/search
-Method: GET
-parameter: query
-Example:
+4. /api/search\
+Method: GET\
+parameter: query\
+Example:\
 ```
 http://localhost:3000/api/search?query=cara%20pencegahan%20stunting
 ```
-5. /Upload
-Method: POST
-location: Body (form-data)
-Key: image
-type: File
+5. /Upload\
+Method: POST\
+location: Body (form-data)\
+Key: image\
+type: File\
